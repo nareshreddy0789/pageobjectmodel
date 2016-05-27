@@ -1,32 +1,46 @@
-package com.bayamp.pageobjects;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-
 /**
- * Created by naresh on 2/24/2016.
+ * 
  */
-public class LoginPage {
+package com.apple.carnival.ui;
 
-    private static WebElement element = null;
+import java.util.concurrent.TimeUnit;
 
-    public static WebElement txtbx_UserName(WebDriver driver) {
-        element = driver.findElement(By.id("login-username"));
-        return element;
-    }
+import org.json.JSONObject;
 
-    public static WebElement txtbx_Password(WebDriver driver) {
-        element = driver.findElement(By.id("login-passwd"));
-        return element;
-    }
+import com.apple.carnival.qa.parser.JsonParserUtil;
+import com.apple.carnival.ui.utilities.ElementLocatorUtility;
+/**
+ * @author harisha
+ *
+ */
+public class LoginPage extends CarnivalUI {
 
-    public static WebElement btn_LogIn(WebDriver driver) {
-        element = driver.findElement(By.id("login-signin"));
-        return element;
-    }
+	private String jsonUserField = "UserField";
+	private String jsonPasswordField = "PasswordField";
+	private String jsonSubmitButton = "SubmitButton";
+
+	private String jsonLocatorFile = "src/main/resources/locators/LoginPage.JSON";
+	private static JSONObject root=null;
+
+	public LoginPage( ) {
+		
+		if(root == null)
+			root = JsonParserUtil.parseJsonFile(jsonLocatorFile);
+	}
+
+	/*
+	 * 
+	 */
+	public void loginToCarnival(String user,String password){
+		
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root, jsonUserField)).sendKeys("admin");
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root, jsonPasswordField)).sendKeys("admin_pass");
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root, jsonSubmitButton)).click();
+		carnivalWebDriver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+
+	}
+	
+
+	
+
 }
-
-
-
-

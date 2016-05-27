@@ -1,40 +1,45 @@
-package com.bayamp.pageobjects;
+package com.apple.carnival.ui;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
+import org.json.JSONObject;
 
-/**
- * Created by naresh on 2/24/2016.
- */
-public class HomePage {
+import com.apple.carnival.qa.parser.JsonParserUtil;
+import com.apple.carnival.ui.utilities.ElementLocatorUtility;
 
-    private static WebElement element = null;
+public class HomePage extends CarnivalUI {
 
-    public static WebElement lnk_MyAccount(WebDriver driver) {
+	private String jsonCreateRequestLink = "CreateRequestLink";
+	private String jsonOverViewOfHosts = "OverViewOfHosts";
+	private String jsonLogout = "LogOut";
+	
+	private String jsonLocatorFile = "src/main/resources/locators/HomePage.JSON";
+	private static JSONObject root=null;
 
-        element = driver.findElement(By.linkText("Sign in"));
 
-        return element;
+	public HomePage(){
+		if(root == null)
+			root = JsonParserUtil.parseJsonFile(jsonLocatorFile);
+	}
+	public void getCreateRequestPage(){
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root,jsonCreateRequestLink)).click();
+	}
 
-    }
+	public void getOverViewOfHostsPage(){
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root,jsonOverViewOfHosts)).click();
+	}
 
-    public static WebElement lnk_LogOut(WebDriver driver) {
+	public void logout() {
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root,jsonLogout)).click();
 
-        element = driver.findElement(By.xpath("//li[@id='uh-profile']/button"));
-        //Initiate mouse action using Actions class
-        Actions builder = new Actions(driver);
-        // move the mouse to the earlier identified menu option
-        builder.moveToElement(element).build().perform();
-        // wait for max of 5 seconds before proceeding. This allows sub menu appears properly before trying to click on it
-        //WebDriverWait wait = new WebDriverWait(driver, 20);
-        //wait.until(ExpectedConditions.presenceOfElementLocated(By.linkText("Sign Out")));  // until this submenu is found
-        //identify menu option from the resulting menu display and click
-        WebElement menuOption = driver.findElement(By.linkText("Sign Out"));
-        return menuOption;
-    }
+	}
+	public void getInstallBuildPage() {
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root,"InstallBuild")).click();
+		
+	}
+	
+	public void getEnvironmentInfoPage() throws InterruptedException {
+		carnivalWebDriver.findElement(ElementLocatorUtility.getWebDriverLocator(root,"EnvironmentInfoLink")).click();
+		Thread.sleep(3000);
+		
+	}
+
 }
-
-
-
